@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Casilla from './components/casilla/Casilla.jsx'
 
 const FILAS = 6
@@ -28,6 +28,11 @@ function App() {
   const ganada = ultimo === SOLUCION
   const terminada = ganada || filaActual === FILAS
 
+  useEffect(() => {
+    // Lleva el cursor a la primera casilla en la que se puede escribir
+    document.querySelector('.casilla:enabled')?.focus()
+  }, [filaActual])
+
 
   function cambiarLetra(f, c, evento) {
     const letra = evento.target.value.toUpperCase()
@@ -38,6 +43,10 @@ function App() {
     const copia = intentos.map((fila) => [...fila])
     copia[f][c] = letra
     setIntentos(copia)
+
+    // Después de escribir una letra, pasamos a la casilla siguiente
+    if (letra !== '') evento.target.nextElementSibling?.focus()
+
   }
 
   function comprobar(evento) {
@@ -50,21 +59,20 @@ function App() {
     setFilaActual(filaActual + 1)
   }
 
-  return (
+ return (
     <form className="juego" onSubmit={comprobar}>
       <h1>Wordle</h1>
       <div className="tablero">
         {intentos.map((fila, f) => (
           <div className="fila" key={f}>
             {fila.map((letra, c) => (
-             <Casilla
+              <Casilla
                 key={c}
                 letra={letra}
                 estado={f < filaActual ? estadoDe(letra, c) : ''}
-                activa={f === filaActual}
+                activa={f === filaActual && !terminada}
                 onCambio={(evento) => cambiarLetra(f, c, evento)}
               />
-
             ))}
           </div>
         ))}
@@ -85,3 +93,4 @@ function App() {
 }
 
 export default App
+

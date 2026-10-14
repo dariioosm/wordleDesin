@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import Casilla from './components/casilla/Casilla.jsx'
 
 /*
-  TODO avisar si letras<5
+  TODO usar borrar(backspace) cuando casilla vacía, para ir a casilla anterior
   */
 
 const FILAS = 6

@@ -8,9 +8,8 @@ import Casilla from './components/casilla/Casilla.jsx'
 
 const FILAS = 6
 const COLUMNAS = 5
-const SOLUCION="PERRO"
-//
-
+const SOLUCION=""
+const SOLUCIONES = ["PERRO","CABRA","GALLO","CEBRA","BURRO"]
 // Crea un tablero vacío: 6 filas de 5 letras en blanco
 function tableroVacio() {
   const tablero = []
@@ -21,7 +20,7 @@ function tableroVacio() {
 }
 
 // Decide el color de una letra ya comprobada
-function estadoDe(letra, columna) {
+function estadoDe(letra, columna,SOLUCION) {
   if (SOLUCION[columna] === letra) return 'correcta'
   if (SOLUCION.includes(letra)) return 'presente'
   return 'ausente'
@@ -30,7 +29,9 @@ function estadoDe(letra, columna) {
 function App() {
   const [intentos, setIntentos] = useState(tableroVacio())
   const [filaActual, setFilaActual] = useState(0)
-
+  const[SOLUCION, setSolucion]= useState(()=>palabraNueva()); 
+  //? utilizo la arrow func para que se ejecute la obtencion de la palabra nueva y use el resultado.
+  //? solo la primera vez que se crea el componente despues lo llamo en la funcion para reiniciar el juego
   const ultimo = filaActual > 0 ? intentos[filaActual - 1].join('') : ''
   const ganada = ultimo === SOLUCION
   const terminada = ganada || filaActual === FILAS
@@ -59,8 +60,16 @@ function App() {
   function reiniciar(){
     //! set intentos llama a tablero vacio para crear la matriz vacía
     //! set fila guarda el valor de la fila actual y como va de 0 a max, se setea a 0
-    setIntentos(tableroVacio())
-    setFilaActual(0)
+    setIntentos(tableroVacio());
+    setFilaActual(0);
+    setSolucion(palabraNueva());
+  }
+
+  function palabraNueva(){
+    let indice = Math.floor(Math.random()*SOLUCIONES.length);
+    let solucion='';
+    solucion = SOLUCIONES[indice];
+    return solucion
   }
 
   function comprobar(evento) {
@@ -83,7 +92,7 @@ function App() {
               <Casilla
                 key={c}
                 letra={letra}
-                estado={f < filaActual ? estadoDe(letra, c) : ''}
+                estado={f < filaActual ? estadoDe(letra, c,SOLUCION) : ''}
                 activa={f === filaActual && !terminada}
                 onCambio={(evento) => cambiarLetra(f, c, evento)}
               />

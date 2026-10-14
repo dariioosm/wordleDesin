@@ -1,9 +1,16 @@
 import { useEffect, useState } from 'react'
 import Casilla from './components/casilla/Casilla.jsx'
 
+/*
+  TODO añadir botón de nueva partida que reinicie el tablero
+  ? const SOLUCIONES= ["PERRO","CABRA","GALLO","CEBRA","BURRO"]
+  */
+
 const FILAS = 6
 const COLUMNAS = 5
 const SOLUCION="PERRO"
+//
+
 // Crea un tablero vacío: 6 filas de 5 letras en blanco
 function tableroVacio() {
   const tablero = []
@@ -48,6 +55,13 @@ function App() {
     if (letra !== '') evento.target.nextElementSibling?.focus()
 
   }
+  //? Funcion reiniciar partida
+  function reiniciar(){
+    //! set intentos llama a tablero vacio para crear la matriz vacía
+    //! set fila guarda el valor de la fila actual y como va de 0 a max, se setea a 0
+    setIntentos(tableroVacio())
+    setFilaActual(0)
+  }
 
   function comprobar(evento) {
     // Evita que el navegador recargue la página al enviar el formulario
@@ -78,11 +92,14 @@ function App() {
         ))}
       </div>
       {terminada ? (
-        <p className="mensaje" role="status">
-          {ganada
-            ? '¡Enhorabuena, has acertado!'
-            : `La palabra era ${SOLUCION}`}
-        </p>
+        <>
+          <p className="mensaje" role="status">
+            {ganada
+              ? '¡Enhorabuena, has acertado!'
+              : `La palabra era ${SOLUCION}`}
+          </p>
+          <button className='boton' onClick={reiniciar}>Nueva partida</button>
+        </>
       ) : (
         <button className="boton" type="submit">
           Comprobar

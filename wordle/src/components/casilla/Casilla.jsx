@@ -9,4 +9,5 @@ function Casilla({ letra, estado = '', activa, onCambio }) {
     />
   )
 }
+
 export default Casilla

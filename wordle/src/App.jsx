@@ -3,7 +3,7 @@ import Casilla from './components/casilla/Casilla.jsx'
 
 const FILAS = 6
 const COLUMNAS = 5
-
+const SOLUCION="PERRO"
 // Crea un tablero vacío: 6 filas de 5 letras en blanco
 function tableroVacio() {
   const tablero = []
@@ -13,11 +13,21 @@ function tableroVacio() {
   return tablero
 }
 
+// Decide el color de una letra ya comprobada
+function estadoDe(letra, columna) {
+  if (SOLUCION[columna] === letra) return 'correcta'
+  if (SOLUCION.includes(letra)) return 'presente'
+  return 'ausente'
+}
+
 function App() {
   const [intentos, setIntentos] = useState(tableroVacio())
   const [filaActual, setFilaActual] = useState(0)
 
-  const terminada = filaActual === FILAS
+  const ultimo = filaActual > 0 ? intentos[filaActual - 1].join('') : ''
+  const ganada = ultimo === SOLUCION
+  const terminada = ganada || filaActual === FILAS
+
 
   function cambiarLetra(f, c, evento) {
     const letra = evento.target.value.toUpperCase()
@@ -40,20 +50,14 @@ function App() {
     setFilaActual(filaActual + 1)
   }
 
-  function estadoDe(letra, columna) {
-  if (SOLUCION[columna] === letra) return 'correcta'
-  if (SOLUCION.includes(letra)) return 'presente'
-  return 'ausente'
-}
-
-return (
+  return (
     <form className="juego" onSubmit={comprobar}>
       <h1>Wordle</h1>
       <div className="tablero">
         {intentos.map((fila, f) => (
           <div className="fila" key={f}>
             {fila.map((letra, c) => (
-              <Casilla
+             <Casilla
                 key={c}
                 letra={letra}
                 estado={f < filaActual ? estadoDe(letra, c) : ''}
@@ -65,9 +69,17 @@ return (
           </div>
         ))}
       </div>
-      <button className="boton" type="submit">
-        Comprobar
-      </button>
+      {terminada ? (
+        <p className="mensaje" role="status">
+          {ganada
+            ? '¡Enhorabuena, has acertado!'
+            : `La palabra era ${SOLUCION}`}
+        </p>
+      ) : (
+        <button className="boton" type="submit">
+          Comprobar
+        </button>
+      )}
     </form>
   )
 }

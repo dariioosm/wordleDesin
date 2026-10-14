@@ -2,15 +2,14 @@ import { useEffect, useState } from 'react'
 import Casilla from './components/casilla/Casilla.jsx'
 
 /*
-  TODO añadir botón de nueva partida que reinicie el tablero
-  ? const SOLUCIONES= ["PERRO","CABRA","GALLO","CEBRA","BURRO"]
+  TODO avisar si letras<5
   */
 
 const FILAS = 6
 const COLUMNAS = 5
 const SOLUCION=""
 const SOLUCIONES = ["PERRO","CABRA","GALLO","CEBRA","BURRO"]
-// Crea un tablero vacío: 6 filas de 5 letras en blanco
+//* Crea un tablero vacío: 6 filas de 5 letras en blanco
 function tableroVacio() {
   const tablero = []
   for (let f = 0; f < FILAS; f++) {
@@ -19,7 +18,7 @@ function tableroVacio() {
   return tablero
 }
 
-// Decide el color de una letra ya comprobada
+//* Decide el color de una letra ya comprobada
 function estadoDe(letra, columna,SOLUCION) {
   if (SOLUCION[columna] === letra) return 'correcta'
   if (SOLUCION.includes(letra)) return 'presente'
@@ -32,27 +31,30 @@ function App() {
   const[SOLUCION, setSolucion]= useState(()=>palabraNueva()); 
   //? utilizo la arrow func para que se ejecute la obtencion de la palabra nueva y use el resultado.
   //? solo la primera vez que se crea el componente despues lo llamo en la funcion para reiniciar el juego
+
+  const [mensaje,setMensaje]=useState('');
+  //? constante para poder enviar mensaje y utilizacion del useState para poder modificarlo cuando cambie el estado pertinente
   const ultimo = filaActual > 0 ? intentos[filaActual - 1].join('') : ''
   const ganada = ultimo === SOLUCION
   const terminada = ganada || filaActual === FILAS
 
   useEffect(() => {
-    // Lleva el cursor a la primera casilla en la que se puede escribir
+    //* Lleva el cursor a la primera casilla en la que se puede escribir
     document.querySelector('.casilla:enabled')?.focus()
   }, [filaActual])
 
 
   function cambiarLetra(f, c, evento) {
     const letra = evento.target.value.toUpperCase()
-    // Solo aceptamos una letra, o nada si se ha borrado
+    //* Solo aceptamos una letra, o nada si se ha borrado
     if (!/^[A-ZÑ]?$/.test(letra)) return
 
-    // Copiamos el tablero, cambiamos la copia y la guardamos
+    //* Copiamos el tablero, cambiamos la copia y la guardamos
     const copia = intentos.map((fila) => [...fila])
     copia[f][c] = letra
     setIntentos(copia)
 
-    // Después de escribir una letra, pasamos a la casilla siguiente
+    //* Después de escribir una letra, pasamos a la casilla siguiente
     if (letra !== '') evento.target.nextElementSibling?.focus()
 
   }
@@ -73,12 +75,16 @@ function App() {
   }
 
   function comprobar(evento) {
-    // Evita que el navegador recargue la página al enviar el formulario
+    //* Evita que el navegador recargue la página al enviar el formulario
     evento.preventDefault()
     if (terminada) return
-    // No se puede comprobar una fila incompleta
-    if (intentos[filaActual].includes('')) return
-
+    //* No se puede comprobar una fila incompleta
+    if (intentos[filaActual].includes('')){
+      setMensaje("Faltan letras")
+      return
+      
+    }
+      
     setFilaActual(filaActual + 1)
   }
 
@@ -100,6 +106,7 @@ function App() {
           </div>
         ))}
       </div>
+      {mensaje && <p className='alerta'>{mensaje}</p> }
       {terminada ? (
         <>
           <p className="mensaje" role="status">

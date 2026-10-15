@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react'
 import Casilla from './components/casilla/Casilla.jsx'
 
 /*
-  TODO si solucion es perro e input es rrrrr sólo en verde las que estén en posición. El resto van en gris
+  TODO añadir aria-label fila columna estado y añadir bordes distintivos por si daltonismo
   */
 
 const FILAS = 6
 const COLUMNAS = 5
 const SOLUCION=""
-const SOLUCIONES = ["PERRO"]
+const SOLUCIONES = ["PERRO","CABRA","BURRO","CEBRA"]
 //* Crea un tablero vacío: 6 filas de 5 letras en blanco
 function tableroVacio() {
   const tablero = []
@@ -106,6 +106,8 @@ function App() {
               <Casilla
                 key={c}
                 letra={letra}
+                fila={f+1}
+                columna={c+1}
                 estado={f < filaActual ? estadoDe(fila, c,SOLUCION) : ''}
                 activa={f === filaActual && !terminada}
                 onCambio={(evento) => cambiarLetra(f, c, evento)}

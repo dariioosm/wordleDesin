@@ -37,19 +37,23 @@ body {
 
 .casilla.correcta {
   background: #2e7d32;
-  border-color: #2e7d32;
+  border:5px solid;
+  border-color: black;
   color: #ffffff;
+  
 }
 
 .casilla.presente {
   background: #f2c94c;
-  border-color: #f2c94c;
+  border:8px dotted;
+  border-color: black;
   color: #1a1a1b;
 }
 
 .casilla.ausente {
   background: #5f6368;
-  border-color: #5f6368;
+  border:5px dashed;
+  border-color: black;
   color: #ffffff;
 }
 .tablero {

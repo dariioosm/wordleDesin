@@ -1,0 +1,39 @@
+.teclado{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px;
+}
+
+.fila-tecla{
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.tecla {
+  width: 40px;
+  height: 50px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-weight: bold;
+  background: #d3d6da; /* Color base (gris claro) */
+}
+
+.tecla.correcta {
+  background: #2e7d32;
+  border-color: #2e7d32;
+  color: #ffffff;
+}
+
+.tecla.presente {
+  background: #f2c94c;
+  border-color: #f2c94c;
+  color: #1a1a1b;
+}
+
+.tecla.ausente {
+  background: #5f6368;
+  border-color: #5f6368;
+  color: #ffffff;
+}

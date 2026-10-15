@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import Casilla from './components/casilla/Casilla.jsx'
+import Teclado from './components/teclado/Teclado.jsx'
 
 /*
-  TODO añadir aria-label fila columna estado y añadir bordes distintivos por si daltonismo
+  TODO añadir componente teclado que tenga letras coloreadas de la misma forma que en tablero
   */
 
 const FILAS = 6
@@ -44,7 +45,7 @@ function App() {
   const ultimo = filaActual > 0 ? intentos[filaActual - 1].join('') : ''
   const ganada = ultimo === SOLUCION
   const terminada = ganada || filaActual === FILAS
-
+  const [coloresTecla, setColoresTecla] = useState({})
   useEffect(() => {
     //* Lleva el cursor a la primera casilla en la que se puede escribir
     document.querySelector('.casilla:enabled')?.focus()
@@ -95,7 +96,16 @@ function App() {
       
     setFilaActual(filaActual + 1)
   }
-
+  function pulsarTecla(letra){
+    if(terminada)return
+    if (!/^[A-ZÑ]?$/.test(letra)) return
+    const fila= intentos[filaActual]
+    const c = fila.findIndex(letra=>letra=='')
+    if(c==-1 )return
+    const copia = intentos.map((fila)=>[...fila])
+    copia[filaActual][c]=letra
+    setIntentos(copia)
+  }
  return (
     <form className="juego" onSubmit={comprobar}>
       <h1>Wordle</h1>
@@ -131,6 +141,7 @@ function App() {
           Comprobar
         </button>
       )}
+      <Teclado onPulsar={pulsarTecla} colores={{}}/>
     </form>
   )
 }

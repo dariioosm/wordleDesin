@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react'
 import Casilla from './components/casilla/Casilla.jsx'
 
 /*
-  TODO usar borrar(backspace) cuando casilla vacía, para ir a casilla anterior
+  TODO si solucion es perro e input es rrrrr sólo en verde las que estén en posición. El resto van en gris
   */
 
 const FILAS = 6
 const COLUMNAS = 5
 const SOLUCION=""
-const SOLUCIONES = ["PERRO","CABRA","GALLO","CEBRA","BURRO"]
+const SOLUCIONES = ["PERRO"]
 //* Crea un tablero vacío: 6 filas de 5 letras en blanco
 function tableroVacio() {
   const tablero = []
@@ -19,9 +19,16 @@ function tableroVacio() {
 }
 
 //* Decide el color de una letra ya comprobada
-function estadoDe(letra, columna,SOLUCION) {
-  if (SOLUCION[columna] === letra) return 'correcta'
-  if (SOLUCION.includes(letra)) return 'presente'
+function estadoDe(fila, columna,solucion) {
+  const sobran=[...solucion]; //? se crea un nuevo array ['p','e','r','r','o'] se separa el string en char
+  for(let i=0; i<COLUMNAS;i++){
+      if (fila[i] === sobran[i]){ 
+        sobran[i]=null} //? se quitan las letras del splice y pasa a p,e,null,null,o
+  }
+  if(fila[columna]==solucion[columna]) return 'correcta' //? si la letra esta en la misma poscion que la solucion se pinta de verde
+  
+  const indice = sobran.indexOf(fila[columna]);
+  if (indice != -1) return 'presente' //? IndexOf() devuelve como respuesta -1 si no se encuentra el valor en el array
   return 'ausente'
 }
 
@@ -58,6 +65,7 @@ function App() {
     if (letra !== '') evento.target.nextElementSibling?.focus()
 
   }
+
   //? Funcion reiniciar partida
   function reiniciar(){
     //! set intentos llama a tablero vacio para crear la matriz vacía
@@ -98,7 +106,7 @@ function App() {
               <Casilla
                 key={c}
                 letra={letra}
-                estado={f < filaActual ? estadoDe(letra, c,SOLUCION) : ''}
+                estado={f < filaActual ? estadoDe(fila, c,SOLUCION) : ''}
                 activa={f === filaActual && !terminada}
                 onCambio={(evento) => cambiarLetra(f, c, evento)}
               />

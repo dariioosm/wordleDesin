@@ -5,7 +5,7 @@ function Teclado({onPulsar,colores}){
             {filas.map((fila,f)=>(
                 <div className="fila-tecla"
                  key={f}>
-                    {[...fila].map((letra)=>(
+                    {[...fila].map((    letra)=>(
                         <button 
                             className={`tecla ${colores[letra] || ''}`}
                             onClick={()=>onPulsar(letra)}

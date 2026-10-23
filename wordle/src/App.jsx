@@ -4,6 +4,7 @@ import Teclado from './components/teclado/Teclado.jsx'
 
 /*
   TODO añadir componente teclado que tenga letras coloreadas de la misma forma que en tablero
+  * onkeydown onkeyup onchange es el orden
   */
 
 const FILAS = 6
@@ -21,6 +22,7 @@ function tableroVacio() {
 
 //* Decide el color de una letra ya comprobada
 function estadoDe(fila, columna,solucion) {
+  //TODO Subir la constante sobran con el resto de costs y realizar otro bucle para poder ir haciendo las comprobaciones restantes
   const sobran=[...solucion]; //? se crea un nuevo array ['p','e','r','r','o'] se separa el string en char
   for(let i=0; i<COLUMNAS;i++){
       if (fila[i] === sobran[i]){ 
@@ -45,7 +47,7 @@ function App() {
   const ultimo = filaActual > 0 ? intentos[filaActual - 1].join('') : ''
   const ganada = ultimo === SOLUCION
   const terminada = ganada || filaActual === FILAS
-  const [coloresTecla, setColoresTecla] = useState({})
+  //const [coloresTecla, setColoresTecla] = useState(()=>estadoDe())
   useEffect(() => {
     //* Lleva el cursor a la primera casilla en la que se puede escribir
     document.querySelector('.casilla:enabled')?.focus()
@@ -80,12 +82,21 @@ function App() {
     let indice = Math.floor(Math.random()*SOLUCIONES.length);
     let solucion='';
     solucion = SOLUCIONES[indice];
+    
+    //? soluciones.push(anterior)
+    //? var resto = SOLUCIONES.filter(palabra => !soluciones.include(palabras));
+    //? return resto[Math.floor(Math.random()*resto.legth)]
+
+
     return solucion
   }
-
+  /*
+  function colorTecla(fila, columna, SOLUCION){
+    return 
+  }*/
   function comprobar(evento) {
     //* Evita que el navegador recargue la página al enviar el formulario
-    evento.preventDefault()
+    evento.preventDefault() //? preventDefault evita el refresh del sumbtit del formulario
     if (terminada) return
     //* No se puede comprobar una fila incompleta
     if (intentos[filaActual].includes('')){
@@ -106,6 +117,8 @@ function App() {
     copia[filaActual][c]=letra
     setIntentos(copia)
   }
+
+
  return (
     <form className="juego" onSubmit={comprobar}>
       <h1>Wordle</h1>
